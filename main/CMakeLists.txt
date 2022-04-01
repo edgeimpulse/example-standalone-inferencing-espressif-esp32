@@ -15,8 +15,6 @@ ENDIF(DEFINE_DEBUG)
 
 set(include_dirs 
     ${MODEL_FOLDER}
-    ${MODEL_FOLDER}/tflite-model
-    ${MODEL_FOLDER}/model-parameters
     ${EI_SDK_FOLDER}
     ${EI_SDK_FOLDER}/anomaly
     ${EI_SDK_FOLDER}/classifier
