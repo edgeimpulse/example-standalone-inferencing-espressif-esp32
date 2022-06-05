@@ -51,7 +51,7 @@ namespace fs = std::filesystem;
 static tflite::MicroErrorReporter micro_error_reporter;
 static tflite::ErrorReporter* error_reporter = &micro_error_reporter;
 
-#define EI_CLASSIFIER_TFLITE_ARENA_SIZE     (160 * 1024)
+#define EI_CLASSIFIER_TFLITE_ARENA_SIZE     (96 * 1024)
 #define ITERATION_COUNT         10
 #define ITERATION_COUNT_SSD     1
 
@@ -85,14 +85,14 @@ static tflite::ErrorReporter* error_reporter = &micro_error_reporter;
 
 // You can toggle these on / off in case devices don't have enough flash to hold all of them in one go
 // just concat the output afterwards
-#define GESTURES_F32           1
+#define GESTURES_F32           0
 #define GESTURES_I8            1
-#define MOBILENET_32_32_F32    1
+#define MOBILENET_32_32_F32    0
 #define MOBILENET_32_32_I8     1
 #define MOBILENET_96_96_F32    0
 #define MOBILENET_96_96_I8     0
 #define MOBILENET_320_320_F32  0
-#define KEYWORDS_F32           1
+#define KEYWORDS_F32           0
 #define KEYWORDS_I8            1
 #define MFCC                   1
 

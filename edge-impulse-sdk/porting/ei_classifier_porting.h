@@ -134,7 +134,7 @@ void ei_free(void *ptr);
 #endif
 
 #ifndef EI_PORTING_ESPRESSIF
-#ifdef CONFIG_IDF_TARGET_ESP32
+#if defined(CONFIG_IDF_TARGET_ESP32) || defined(CONFIG_IDF_TARGET_ESP32C3)
 #define EI_PORTING_ESPRESSIF      1
 #else
 #define EI_PORTING_ESPRESSIF     0

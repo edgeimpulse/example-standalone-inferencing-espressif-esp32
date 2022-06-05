@@ -55,7 +55,7 @@ uint64_t ei_read_timer_us() {
 void ei_putchar(char c)
 {
     /* Send char to serial output */
-    ei_printf("%c", c);
+    putchar(c);
 }
 
 /**
