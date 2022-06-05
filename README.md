@@ -21,7 +21,11 @@ While the script is mainly tested with ESP-EYE, other ESP32-based development bo
    ```bash
    get_idf
    ```
-2. Compile:
+2. Switch to ESP32-C3:
+```
+idf.py set-target esp32c3 
+```
+3. Compile:
    ```bash
    idf.py build
    ```
@@ -45,41 +49,26 @@ Use screen, minicom or Serial monitor in Arduino IDE to set up a serial connecti
 Results without ESP-NN:
 ```
 Starting...
-Test: gestures-large-f32
-Iterations: 10
-Total time: 53 ms.
-Time per inference: 5389 us.
 Test: gestures-large-i8
 Iterations: 10
-Total time: 29 ms.
-Time per inference: 2972 us.
-Test: image-32-32-mobilenet-f32
-Iterations: 10
-Total time: 3685 ms.
-Time per inference: 368516 us.
+Total time: 10 ms.
+Time per inference: 1048 us.
+
 Test: image-32-32-mobilenet-i8
 Iterations: 10
-Total time: 4220 ms.
-Time per inference: 422011 us.
-Test: keywords-2d-f32
-Iterations: 10
-Total time: 1704 ms.
-Time per inference: 170413 us.
+Total time: 1316 ms.
+Time per inference: 131657 us.
+
 Test: keywords-2d-i8
 Iterations: 10
-Total time: 1932 ms.
-Time per inference: 193244 us.
-DSP MIPS is 33
+Total time: 577 ms.
+Time per inference: 57746 us.
+
+DSP MIPS is 10
+
 {
-    "gestures-large-f32": 5.389000,
-    "gestures-large-i8": 2.972000,
-    "image-32-32-mobilenet-f32": 368.515991,
-    "image-32-32-mobilenet-i8": 422.010986,
-    "keywords-2d-f32": 170.412994,
-    "keywords-2d-i8": 193.244003
+    "gestures-large-i8": 1.048000,
+    "image-32-32-mobilenet-i8": 131.656998,
+    "keywords-2d-i8": 57.745998
 }
 ```
-Did not run:
-MOBILENET_96_96_F32
-MOBILENET_96_96_I8
-MOBILENET_320_320_F32 
