@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.13.1)
 set(MODEL_FOLDER ..)
 set(EI_SDK_FOLDER ../edge-impulse-sdk)
 
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN=1) # enables ESP-NN optimizations by Espressif
+endif()
+
 OPTION(DEFINE_DEBUG
     "Build the project using debugging code"
     OFF)
@@ -13,7 +17,7 @@ IF(DEFINE_DEBUG)
     MESSAGE("Build type is " ${CMAKE_BUILD_TYPE})
 ENDIF(DEFINE_DEBUG)
 
-set(include_dirs 
+set(include_dirs
     ${MODEL_FOLDER}
     ${MODEL_FOLDER}/tflite-model
     ${MODEL_FOLDER}/model-parameters
@@ -44,3 +48,5 @@ list(APPEND SOURCE_FILES ${MODEL_FILES})
 
 idf_component_register(SRCS "main.cpp" "${SOURCE_FILES}"
                        INCLUDE_DIRS "${include_dirs}")
+
+target_compile_options(${COMPONENT_LIB} PRIVATE -O3)
