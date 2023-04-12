@@ -23,7 +23,7 @@
 /* Include ----------------------------------------------------------------- */
 #include <stdio.h>
 
-#include "ei_run_classifier.h"
+#include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
 #include "driver/gpio.h"
 #include "sdkconfig.h"
@@ -32,7 +32,6 @@
 
 static const float features[] = {
     // copy raw features here (for example from the 'Live classification' page)
-
 };
 
 int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
@@ -41,13 +40,53 @@ int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
   return 0;
 }
 
+void print_inference_result(ei_impulse_result_t result) {
+
+    // Print how long it took to perform inference
+    ei_printf("Timing: DSP %d ms, inference %d ms, anomaly %d ms\r\n",
+            result.timing.dsp,
+            result.timing.classification,
+            result.timing.anomaly);
+
+    // Print the prediction results (object detection)
+#if EI_CLASSIFIER_OBJECT_DETECTION == 1
+    ei_printf("Object detection bounding boxes:\r\n");
+    for (uint32_t i = 0; i < result.bounding_boxes_count; i++) {
+        ei_impulse_result_bounding_box_t bb = result.bounding_boxes[i];
+        if (bb.value == 0) {
+            continue;
+        }
+        ei_printf("  %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\r\n",
+                bb.label,
+                bb.value,
+                bb.x,
+                bb.y,
+                bb.width,
+                bb.height);
+    }
+
+    // Print the prediction results (classification)
+#else
+    ei_printf("Predictions:\r\n");
+    for (uint16_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+        ei_printf("  %s: ", ei_classifier_inferencing_categories[i]);
+        ei_printf("%.5f\r\n", result.classification[i].value);
+    }
+#endif
+
+    // Print anomaly result (if it exists)
+#if EI_CLASSIFIER_HAS_ANOMALY == 1
+    ei_printf("Anomaly prediction: %.3f\r\n", result.anomaly);
+#endif
+
+}
 
 extern "C" int app_main()
 {
     gpio_pad_select_gpio(LED_PIN);
-    gpio_reset_pin(LED_PIN);  
+    gpio_reset_pin(LED_PIN);
 
-    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT); 
+    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
     ei_sleep(100);
 
@@ -73,36 +112,16 @@ extern "C" int app_main()
         features_signal.get_data = &raw_feature_get_data;
 
         // invoke the impulse
-        EI_IMPULSE_ERROR res = run_classifier(&features_signal, &result, false);
-
-        ei_printf("run_classifier returned: %d\n", res);
-
-        if (res != 0)
-        return 1;
-
-        ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
-                result.timing.dsp, result.timing.classification, result.timing.anomaly);
-
-        // print the predictions
-        ei_printf("[");
-        for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++)
-        {
-        ei_printf("%.5f", result.classification[ix].value);
-    #if EI_CLASSIFIER_HAS_ANOMALY == 1
-        ei_printf(", ");
-    #else
-        if (ix != EI_CLASSIFIER_LABEL_COUNT - 1)
-        {
-            ei_printf(", ");
+        EI_IMPULSE_ERROR res = run_classifier(&features_signal, &result, false /* debug */);
+        if (res != EI_IMPULSE_OK) {
+            ei_printf("ERR: Failed to run classifier (%d)\n", res);
+            return res;
         }
-    #endif
-        }
-    #if EI_CLASSIFIER_HAS_ANOMALY == 1
-        printf("%.3f", result.anomaly);
-    #endif
-        printf("]\n");
+
+        print_inference_result(result);
 
         gpio_set_level(LED_PIN, 0);
-        ei_sleep(2000);
+        ei_sleep(1000);
     }
 }
+
