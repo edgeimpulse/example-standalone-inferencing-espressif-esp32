@@ -5,6 +5,8 @@ set(EI_SDK_FOLDER ../edge-impulse-sdk)
 
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN=1) # enables ESP-NN optimizations by Espressif
+# disabled by default - enable if you use ESP32S3
+# add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN_S3=1) # enables ESP-NN S3 optimizations by Espressif
 endif()
 
 OPTION(DEFINE_DEBUG
