@@ -42,4 +42,4 @@ list(APPEND SOURCE_FILES ${MODEL_FILES})
 idf_component_register(SRCS "main.cpp" "${SOURCE_FILES}"
                        INCLUDE_DIRS "${include_dirs}")
 
-target_compile_options(${COMPONENT_LIB} PRIVATE -O3)
+target_compile_options(${COMPONENT_LIB} PRIVATE -std=gnu++17)

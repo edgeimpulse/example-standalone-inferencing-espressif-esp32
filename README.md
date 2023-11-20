@@ -14,7 +14,7 @@ While the script is mainly tested with ESP-EYE, other ESP32-based development bo
 
 * [Edge Impulse CLI](https://docs.edgeimpulse.com/docs/cli-installation).
 
-* [ESP IDF 4.4](https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32/get-started/index.html).
+* [ESP IDF 5.1.1](https://docs.espressif.com/projects/esp-idf/en/v5.1.1/esp32/get-started/index.html).
 
 
 ## Building the application
@@ -35,7 +35,7 @@ Unzip the deployed `C++ library` from your Edge Impulse project and copy only th
    ├─ README.md
    ├─ sdkconfig
    ├─ sdkconfig.old
-   └─ partitions.csv   
+   └─ partitions.csv
    ```
 
 ### Compile
@@ -63,3 +63,7 @@ Where ```/dev/ttyUSB0``` needs to be changed to actual port where ESP32 is conne
 ### Serial connection
 
 Use screen, minicom or Serial monitor in Arduino IDE to set up a serial connection over USB. The following UART settings are used: 115200 baud, 8N1.
+
+### Troubleshooting and optimization
+
+When switching boards or upgrading to newer version of SDK, the `sdkconfig` file in the project folder gets overwritten. Run `idf.py menuconfig` to enter configuration menu and make sure that all the relevant performance settings (e.g. Flash SPI speed (80 MHz), CPU Frequency (240 MHz), CONFIG_COMPILER_OPTIMIZATION_PERF=y) are set.

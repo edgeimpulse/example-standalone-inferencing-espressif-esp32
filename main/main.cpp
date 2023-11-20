@@ -27,6 +27,7 @@
 
 #include "driver/gpio.h"
 #include "sdkconfig.h"
+#include "esp_idf_version.h"
 
 #define LED_PIN GPIO_NUM_21
 
@@ -34,8 +35,16 @@ static const float features[] = {
     // copy raw features here (for example from the 'Live classification' page)
 };
 
-int raw_feature_get_data(size_t offset, size_t length, float *out_ptr)
-{
+void setup_led() {
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+    esp_rom_gpio_pad_select_gpio(LED_PIN);
+#elif ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 0, 0)
+    gpio_pad_select_gpio(LED_PIN);
+#endif
+    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+}
+
+int raw_feature_get_data(size_t offset, size_t length, float *out_ptr) {
   memcpy(out_ptr, features + offset, length * sizeof(float));
   return 0;
 }
@@ -83,11 +92,7 @@ void print_inference_result(ei_impulse_result_t result) {
 
 extern "C" int app_main()
 {
-    gpio_pad_select_gpio(LED_PIN);
-    gpio_reset_pin(LED_PIN);
-
-    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
-
+    setup_led();
     ei_sleep(100);
 
     ei_impulse_result_t result = { nullptr };
