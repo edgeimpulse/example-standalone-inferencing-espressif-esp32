@@ -8,7 +8,7 @@ if(NOT CMAKE_BUILD_EARLY_EXPANSION)
     add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN=1)
     # conditionally enable ESP32S3 specific optimizations
     if(${IDF_TARGET} STREQUAL "esp32s3")
-        add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN_S3=1)∂
+        add_definitions(-DEI_CLASSIFIER_TFLITE_ENABLE_ESP_NN_S3=1)
     endif()
 endif()
 
